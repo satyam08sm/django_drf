@@ -5,6 +5,26 @@ from .serializers import StatusSerializer
 from .models import Status
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.authentication import SessionAuthentication
+from rest_framework import permissions
+
+
+class StatusAPIDetailView(mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin,
+                          generics.RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Status.objects.all()
+    serializer_class = StatusSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class StatusAPIView(mixins.CreateModelMixin,
@@ -12,8 +32,8 @@ class StatusAPIView(mixins.CreateModelMixin,
                     mixins.UpdateModelMixin,
                     mixins.DestroyModelMixin,
                     generics.ListAPIView):
-    permission_classes = []
-    authentication_classes = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    authentication_classes = [SessionAuthentication]
 
     serializer_class = StatusSerializer
 
@@ -52,19 +72,8 @@ class StatusAPIView(mixins.CreateModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 # class StatusDetailView(mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.RetrieveAPIView):
 #     permission_classes = []
