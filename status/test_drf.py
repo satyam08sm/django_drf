@@ -6,33 +6,40 @@ ENDPOINT = "http://127.0.0.1:8000/"
 image_path = os.path.join(os.getcwd(), "sample_ss.jpg")
 AUTH_ENDPOINT = ENDPOINT + 'api/token/'
 REFRESH_ENDPOINT = AUTH_ENDPOINT + 'refresh/'
+REG_ENDPOINT = ENDPOINT + 'register/'
 
 data = {
-    'username': 'satyam',
+    'username': 'satyam9',
+    'email': 'abc@abc.com',
     'password': '123456',
+    'password2': '123456',
 }
 headers = {
     'content-type': 'application/json'
 }
-r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
-access_token = r.json()['access']
-refresh_token = r.json()['refresh']
+r = requests.post(REG_ENDPOINT, data=json.dumps(data), headers=headers)
+print(r.text)
+# r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
+# access_token = r.json()['access']
+# refresh_token = r.json()['refresh']
 # print(r.json())
 
 p_data = {"content": "put2 - new data auth"}
-post_data = json.dumps(p_data)
-post_headers = {
-    # 'content-type': 'application/json',
-    'Authorization': "Bearer " + access_token
-}
 
-with open(image_path, 'rb') as image:
-    file_data = {
-        'image': image
-    }
-    post_response = requests.put(ENDPOINT + str(7) + "/", headers=post_headers, files=file_data)
 
-print(post_response.text)
+# post_data = json.dumps(p_data)
+# post_headers = {
+#     # 'content-type': 'application/json',
+#     'Authorization': "Bearer " + access_token
+# }
+
+# with open(image_path, 'rb') as image:
+#     file_data = {
+#         'image': image
+#     }
+#     post_response = requests.put(ENDPOINT + str(7) + "/", headers=post_headers, files=file_data)
+#
+# print(post_response.text)
 
 # refresh_data = {
 #     'refresh': refresh_token,
