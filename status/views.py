@@ -7,12 +7,13 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 from rest_framework import permissions
+from accounts.api.permissions import IsOwnerOrReadOnly
 
 
 class StatusAPIDetailView(mixins.UpdateModelMixin,
                           mixins.DestroyModelMixin,
                           generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     queryset = Status.objects.all()
     serializer_class = StatusSerializer
 

@@ -9,16 +9,48 @@ REFRESH_ENDPOINT = AUTH_ENDPOINT + 'refresh/'
 REG_ENDPOINT = ENDPOINT + 'register/'
 
 data = {
-    'username': 'satyam9',
-    'email': 'abc@abc.com',
+    'username': 'satyam25',
     'password': '123456',
-    'password2': '123456',
 }
 headers = {
-    'content-type': 'application/json'
+    'content-type': 'application/json',
+    # "Authorization": "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3ODAzMDIyLCJqdGkiOiI3NjNhYmZmYTg3MDg0NDIxOTI3YjJkYmFlNDU2OTRiNiIsInVzZXJfaWQiOjI2fQ.CKTRNpdhX8Ke3PvHKTKNt67e_d02NjH6hl1om2XB-Hk",
 }
-r = requests.post(REG_ENDPOINT, data=json.dumps(data), headers=headers)
+r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
+# print(r.json()['access'])
+access_token = r.json()['access']
+
+data2 = {
+    'content': 'updated sample with perm'
+}
+headers2 = {
+    'Authorization': 'Bearer ' + access_token,
+}
+
+r = requests.put(ENDPOINT + '8/', data=data2, headers=headers2)
 print(r.text)
+# r = requests.post(ENDPOINT, data=json.dumps(data_content), headers=headers)
+
+# registration
+# headers = {
+#     'content-type': 'application/json',
+#     "Authorization": "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA3ODAzMDIyLCJqdGkiOiI3NjNhYmZmYTg3MDg0NDIxOTI3YjJkYmFlNDU2OTRiNiIsInVzZXJfaWQiOjI2fQ.CKTRNpdhX8Ke3PvHKTKNt67e_d02NjH6hl1om2XB-Hk",
+# }
+# data = {
+#     'username': 'satyam25',
+#     'email': 'abc@abc.com',
+#     'password': '123456',
+#     'password2': '123456',
+# }
+#
+# data_content = {
+#     'content': 'sample',
+# }
+# r = requests.post(REG_ENDPOINT, data=json.dumps(data), headers=headers)
+# print(r.json())
+
+####
+
 # r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
 # access_token = r.json()['access']
 # refresh_token = r.json()['refresh']

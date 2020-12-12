@@ -6,6 +6,7 @@ from django.db.models import Q
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from .serializers import RegisterSerializer
+from.permissions import AnonPermissionOnly, IsOwnerOrReadOnly
 
 User = get_user_model()
 
@@ -13,7 +14,10 @@ User = get_user_model()
 class RegisterAPIView(generics.CreateAPIView):
     qs = User.objects.all()
     serializer_class = RegisterSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AnonPermissionOnly]
+
+    def get_serializer_context(self, *args, **kwargs):
+        return {'request': self.request}
 
 # class AuthView(APIView):
 #     permission_classes = [permissions.AllowAny]
@@ -34,4 +38,3 @@ class RegisterAPIView(generics.CreateAPIView):
 #             if user_obj.check_password(password):
 #                 user = user_obj
 #                 refresh = RefreshToken.for_user(user)
-

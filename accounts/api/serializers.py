@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -7,6 +9,7 @@ User = get_user_model()
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    token = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -15,6 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'password2',
+            'token',
         ]
         # extra_kwargs = {'password': {'write_only': True}}
 
@@ -33,5 +37,21 @@ class RegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email']
         )
         user_obj.set_password(validated_data.get('password'))
+        # user_obj.is_active = False
         user_obj.save()
         return user_obj
+
+    # def validate(self, attrs):
+    #     data = super().validate(attrs)
+    #     refresh = RefreshToken.for_user(self.user)
+    #     data['name'] = self.user.username
+    #     data['refresh'] = str(refresh)
+    #     data['access'] = str(refresh.access_token)
+    #     return data
+
+    def get_token(self, obj):
+        refresh = RefreshToken.for_user(User)
+        # request = self.context['request']
+        # print(dir(request))
+        # return request.user.is_authenticated
+        return str(refresh.access_token)
