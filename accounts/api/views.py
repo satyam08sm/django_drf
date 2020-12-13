@@ -6,9 +6,31 @@ from django.db.models import Q
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics
 from .serializers import RegisterSerializer
-from.permissions import AnonPermissionOnly, IsOwnerOrReadOnly
+from accounts.api.user.serializers import UserDetailSerializer
+from .permissions import AnonPermissionOnly, IsOwnerOrReadOnly
+from status.serializers import StatusInlineSerializer
+from status.models import Status
 
 User = get_user_model()
+
+
+class UserDetailAPIView(generics.RetrieveAPIView):
+    queryset = User.objects.filter(is_active=True)
+    serializer_class = UserDetailSerializer
+    lookup_field = 'username'
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+
+class UserStatusListAPIView(generics.ListAPIView):
+    serializer_class = StatusInlineSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        username = self.kwargs.get('username', None)
+        if username is None:
+            return Status.objects.none()
+        return Status.objects.filter(user__username=username)
 
 
 class RegisterAPIView(generics.CreateAPIView):
