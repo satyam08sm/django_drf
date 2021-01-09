@@ -8,7 +8,14 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'drf_tutorial.restconf.pagination.CustomPaginator',
+    'PAGE_SIZE': 2,
+
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.SearchFilter',
+                                'rest_framework.filters.OrderingFilter'),
+    'SEARCH_PARAM': 'search',
+    'ORDERING_PARAM': 'order',
 }
 
 SIMPLE_JWT = {

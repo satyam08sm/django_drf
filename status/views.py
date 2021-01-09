@@ -33,15 +33,18 @@ class StatusAPIView(mixins.CreateModelMixin,
                     mixins.DestroyModelMixin,
                     generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    search_fields = ['user__username', 'content']
+    queryset = Status.objects.all()
+    ordering_fields = ['id', 'timestamp']
 
     serializer_class = StatusSerializer
 
-    def get_queryset(self):
-        qs = Status.objects.all()
-        query = self.request.GET.get('q')
-        if query is not None:
-            qs = qs.filter(content__icontains=query)
-        return qs
+    # def get_queryset(self):
+    #     qs = Status.objects.all()
+    #     query = self.request.GET.get('q')
+    #     if query is not None:
+    #         qs = qs.filter(content__icontains=query)
+    #     return qs
 
     def get_object(self):
         request = self.request

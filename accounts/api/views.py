@@ -10,6 +10,7 @@ from accounts.api.user.serializers import UserDetailSerializer
 from .permissions import AnonPermissionOnly, IsOwnerOrReadOnly
 from status.serializers import StatusInlineSerializer
 from status.models import Status
+from status.views import StatusAPIView
 
 User = get_user_model()
 
@@ -23,7 +24,7 @@ class UserDetailAPIView(generics.RetrieveAPIView):
         return {'request': self.request}
 
 
-class UserStatusListAPIView(generics.ListAPIView):
+class UserStatusListAPIView(StatusAPIView):
     serializer_class = StatusInlineSerializer
 
     def get_queryset(self, *args, **kwargs):
